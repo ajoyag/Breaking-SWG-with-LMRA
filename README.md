@@ -12,7 +12,9 @@ A simulation inspired by SquareX's research on Last Mile Reassembly Attacks (LMR
 3. Simulation Purpose: Demonstrates the concept of a phishing-style attack or testing bypasses for SWG protections.
 
 # Credits
-This project is inspired by SquareX's research on bypassing SWGs using LMRA techniques. It aims to educate developers and security enthusiasts on secure web gateway vulnerabilities and their potential exploitation.
+This project is inspired by SquareX's demonstration on Breaking Secure Web Gateways (SWG) with Last Mile Reassembly Attacks (LMRA). It aims to replicate some aspects of the concept for educational purposes.
+
+For more information and attacks like this, visit their website: https://browser.security/.
 
 ## Getting Started
 
