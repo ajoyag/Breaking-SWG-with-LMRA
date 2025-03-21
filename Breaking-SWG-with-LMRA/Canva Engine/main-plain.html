@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Canvas Phishing Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    canvas {
+      display: block;
+      background: #fff;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+<canvas id="loginCanvas" width="1700" height="895"></canvas>
+
+<script>
+  const canvas = document.getElementById("loginCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const backgroundImg = new Image();
+  backgroundImg.src = "linkedin_login.png";
+
+  let activeField = null;
+  let emailValue = "";
+  let passwordValue = "";
+  let emailClicked = false;
+  let passwordClicked = false;
+
+  const emailField = { x: 700, y: 395, width: 260, height: 40 };
+  const passwordField = { x: 700, y: 470, width: 255, height: 40 };
+  const signInButton = { x: 730, y: 607, width: 240, height: 40 }; // Transparent button area
+
+  backgroundImg.onload = () => {
+    drawInterface();
+  };
+
+  function drawInterface() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+
+    // Email Field
+    ctx.fillStyle = emailClicked || emailValue ? "#fff" : "transparent"; // White background if clicked or has value
+    ctx.fillRect(emailField.x, emailField.y, emailField.width, emailField.height);
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#000"; // Ensure text is black
+    ctx.fillText(emailValue, emailField.x + 5, emailField.y + emailField.height - 10);
+
+    // Password Field
+    ctx.fillStyle = passwordClicked || passwordValue ? "#fff" : "transparent"; // White background if clicked or has value
+    ctx.fillRect(passwordField.x, passwordField.y, passwordField.width, passwordField.height);
+    ctx.fillStyle = "#000"; // Ensure text is black
+    ctx.fillText("*".repeat(passwordValue.length), passwordField.x + 5, passwordField.y + passwordField.height - 10);
+
+    // No visual rendering for the sign-in button (transparent area)
+  }
+
+  canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    if (mouseX >= emailField.x && mouseX <= emailField.x + emailField.width &&
+        mouseY >= emailField.y && mouseY <= emailField.y + emailField.height) {
+      activeField = "email";
+      emailClicked = true;
+      passwordClicked = false;
+    } else if (mouseX >= passwordField.x && mouseX <= passwordField.x + passwordField.width &&
+               mouseY >= passwordField.y && mouseY <= passwordField.y + passwordField.height) {
+      activeField = "password";
+      passwordClicked = true;
+      emailClicked = false;
+    } else if (mouseX >= signInButton.x && mouseX <= signInButton.x + signInButton.width &&
+               mouseY >= signInButton.y && mouseY <= signInButton.y + signInButton.height) {
+      alert(`Email/Phone: ${emailValue}\nPassword: ${passwordValue}`);
+      emailValue = "";
+      passwordValue = "";
+      emailClicked = false;
+      passwordClicked = false;
+      activeField = null;
+    } else {
+      activeField = null;
+      emailClicked = false;
+      passwordClicked = false;
+    }
+    drawInterface();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (!activeField) return;
+
+    if (e.key === "Backspace") {
+      if (activeField === "email") {
+        emailValue = emailValue.slice(0, -1);
+      } else if (activeField === "password") {
+        passwordValue = passwordValue.slice(0, -1);
+      }
+    } else if (e.key.length === 1) {
+      if (activeField === "email") {
+        emailValue += e.key;
+      } else if (activeField === "password") {
+        passwordValue += e.key;
+      }
+    }
+    drawInterface();
+  });
+</script>
+</body>
+</html>
